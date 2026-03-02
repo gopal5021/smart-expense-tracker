@@ -30,6 +30,7 @@ exports.registerUser = async (req, res) => {
     });
 
   } catch (error) {
+    console.log("Error seen",error);
     res.status(500).json({ message: error.message });
   }
 };

@@ -9,16 +9,21 @@ require("dotenv").config();
 const app = express();
 
 // Middleware
-app.use(cors());
+// app.use(cors());
+
+app.use(cors({
+  origin:"https://smart-expense-tracker-fawn.vercel.app",
+  credentials:true
+}));
 app.use(express.json());
 app.use("/api/auth", authRoutes);
 app.use("/api/expenses", expenseRoutes);
 app.use("/api/analytics", analyticsRoutes);
 
-// Test Route
-app.get("/", (req, res) => {
-  res.send("SmartExpense API Running...");
-});
+// // Test Route
+// app.get("/", (req, res) => {
+//   res.send("SmartExpense API Running...");
+// });                                              
 
 // MongoDB Connection
 mongoose.connect(process.env.MONGO_URI)
@@ -27,6 +32,14 @@ mongoose.connect(process.env.MONGO_URI)
 
 const PORT = process.env.PORT || 5021;
 
+const path=require("path");
+app.use(express.static(path.join(__dirname,"../frontend/dist")));
+app.get("/",(req,resp)=>{
+  resp.sendFile(path.join(__dirname,"../frontend/dist/index.html"));
+});
+
+
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
+
