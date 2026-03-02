@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "http://localhost:5021/api",
+  baseURL: "https://smartexpense-tracker-b8z6.onrender.com/api",
 });
 
 // Add token automatically
