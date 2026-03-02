@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import { getProfile } from "../services/api";
 import API from "../services/api";
 import {
   PieChart,
@@ -24,6 +25,8 @@ function Analytics() {
 
   const [expenses, setExpenses] = useState([]);
   const [categoryTotals, setCategoryTotals] = useState({});
+
+  const [salary,setSalary]=useState(0);
 
   const COLORS = [
     "#8884d8",
@@ -61,7 +64,12 @@ function Analytics() {
   };
 
   useEffect(() => {
-    fetchExpenses();
+    const fetchData=async()=>{
+      await fetchExpenses();
+      const res=await getProfile();
+      setSalary(res.data.salary);
+    };
+    fetchData();
   }, []);
 
   // Month filtering for Pie Chart
@@ -115,19 +123,16 @@ function Analytics() {
     monthlyTotals[m] += Number(e.amount);
   });
 
-  const salary = 250000; // static salary (no backend change)
-
   const yearlyBarData = months.map((m, index) => ({
     month: m,
     expenses: monthlyTotals[index],
     leftMoney: salary - monthlyTotals[index],
   }));
 
+
   // ---- Cumulative Savings Calculation ----
 
-  const cumulativeSavings = yearlyBarData
-    .slice(0, monthIndex + 1)
-    .reduce((sum, m) => sum + m.leftMoney, 0);
+  const cumulativeSavings = salary-monthlyTotals[monthIndex]
 
   return (
     <div className="min-h-screen bg-slate-900 text-white">
