@@ -3,7 +3,7 @@ const Expense = require("../models/Expense");
 exports.getSummary = async (req, res) => {
   try {
     // Get all expenses (no user filtering)
-    const expenses = await Expense.find({});
+    const expenses = await Expense.find({user:req.user.id});
 
     // Total Expense
     const totalExpenses = expenses.reduce(
@@ -48,7 +48,7 @@ exports.getSummary = async (req, res) => {
 
 exports.exportData = async (req, res) => {
   try {
-    const expenses = await Expense.find({});
+    const expenses = await Expense.find({user:req.user.id});
 
     const formatted = expenses.map((e) => ({
       date: e.date,
