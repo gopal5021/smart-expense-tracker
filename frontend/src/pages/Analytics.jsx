@@ -126,13 +126,18 @@ function Analytics() {
   const yearlyBarData = months.map((m, index) => ({
     month: m,
     expenses: monthlyTotals[index],
-    leftMoney: salary - monthlyTotals[index],
+    leftMoney: salary*(index + 1) - monthlyTotals.slice(0,index+1).reduce((a,b)=>a+b,0),
   }));
 
 
   // ---- Cumulative Savings Calculation ----
 
-  const cumulativeSavings = salary-monthlyTotals[monthIndex]
+  // const cumulativeSavings = salary-monthlyTotals[monthIndex];                 //
+  let totalExpensesTillMonth=0;
+  for(let i=0;i<=monthIndex;i++){
+    totalExpensesTillMonth+=monthlyTotals[i];
+  }
+  const cumulativeSavings=salary*(monthIndex+1)-totalExpensesTillMonth;
 
   return (
     <div className="min-h-screen bg-slate-900 text-white">
